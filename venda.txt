@@ -2,3 +2,5 @@ banana|5|fruta|joao|eduardo|3|30/01/2024
 banana|5|fruta|joao|eduardo|3|30/01/2024
 Coca|5|Bebidas|Joao|Maria|2|31/01/2024
 Coca|5|Bebidas|Joao|Maria|2|31/01/2024
+Arroz|10|Alimento|Joao|Maria|2|31/01/2024
+Arroz|10|Alimento|Joao|Maria|2|31/01/2024

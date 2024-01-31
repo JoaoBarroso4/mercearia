@@ -22,11 +22,11 @@ class DaoVenda:
     def salvar(cls, venda: Venda):
         venda_info = '|'.join([
             venda.itensVendidos.nome,
-            str(venda.itensVendidos.preco),
+            venda.itensVendidos.preco,
             venda.itensVendidos.categoria,
             venda.vendedor,
             venda.comprador,
-            str(venda.qtdVendida),
+            venda.qtdVendida,
             venda.data
         ])
 
@@ -40,7 +40,7 @@ class DaoVenda:
 
             cls.venda = list(map(lambda x: x.replace('\n', '').split('|'), cls.venda))
 
-        return [Venda(Produtos(v[0], v[1], v[2]), v[3], v[4], v[5], v[6]) for v in cls.venda]
+        return [Venda(Produtos(v[0], v[1], v[2]), v[3], v[4], int(v[5]), v[6]) for v in cls.venda]
 
 
 # simular venda
@@ -55,7 +55,7 @@ class DaoProdutos:
     def salvar(cls, produto: Produtos):
         produto_info = '|'.join([
             produto.nome,
-            str(produto.preco),
+            produto.preco,
             produto.categoria
         ])
 
@@ -77,9 +77,9 @@ class DaoEstoque:
     def salvar(cls, estoque: Estoque):
         estoque_info = '|'.join([
             estoque.produto.nome,
-            str(estoque.produto.preco),
+            estoque.produto.preco,
             estoque.produto.categoria,
-            str(estoque.qtd)
+            estoque.qtd
         ])
 
         with open('estoque.txt', 'a') as arq:
@@ -92,7 +92,7 @@ class DaoEstoque:
 
             cls.estoque = list(map(lambda x: x.replace('\n', '').split('|'), cls.estoque))
 
-        return [Estoque(Produtos(e[0], e[1], e[2]), e[3]) for e in cls.estoque]
+        return [Estoque(Produtos(e[0], e[1], e[2]), int(e[3])) for e in cls.estoque]
 
 
 class DaoFornecedor:

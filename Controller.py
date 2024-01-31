@@ -152,6 +152,60 @@ class ControllerEstoque:
                                     str(etq.qtd)]) + '\n')
 
 
-a = ControllerEstoque()
-# a.alterar(Produtos('Arroz', 10, 'Alimento'), Produtos('Coca', 5, 'Bebida'), 10)
-a.listar()
+class ControllerVenda:
+    def inserir(self, produto, vendedor, comprador, qtdVendida):
+        produtos = DaoEstoque.ler()
+        valorCompra = 0
+
+        # verifica se o produto existe
+        existeProd = len(list(filter(lambda x: x.produto.nome == produto, produtos))) > 0
+
+        if existeProd:
+            for i in range(len(produtos)):
+                if produtos[i].produto.nome == produto:
+                    # verifica se a quantidade em estoque é suficiente
+                    if produtos[i].qtd >= int(qtdVendida):
+                        produtos[i].qtd -= int(qtdVendida)
+
+                        venda = Venda(produtos[i].produto, vendedor, comprador, qtdVendida,
+                                      datetime.now().strftime("%d/%m/%Y"))
+                        DaoVenda.salvar(venda)
+
+                        valorCompra = int(produtos[i].produto.preco) * int(qtdVendida)
+
+                        print('Venda realizada com sucesso!')
+                        break
+                    else:
+                        print('Quantidade em estoque insuficiente.')
+                        break
+        else:
+            print('Produto não cadastrado.')
+
+        with open('estoque.txt', 'w') as arq:
+            for prd in produtos:
+                arq.write('|'.join([prd.produto.nome, str(prd.produto.preco), prd.produto.categoria,
+                                    str(prd.qtd)]) + '\n')
+        return valorCompra
+
+    def listar(self):
+        vendas = DaoVenda.ler()
+        produtos = []
+
+        for venda in vendas:
+            produto = venda.itensVendidos.nome
+            qtdVend = venda.qtdVendida
+
+            # verifica se há vendas do produto
+            existeProdVend = len(list(filter(lambda x: x['produto'] == produto, produtos))) > 0
+
+            if existeProdVend:
+                produtos = list(map(lambda x: {'produto': produto, 'qtd': x['qtd'] + qtdVend} if (
+                        x['produto'] == produto) else x, produtos))
+            else:
+                produtos.append({'produto': produto, 'qtd': qtdVend})
+
+        ordenado = sorted(produtos, key=lambda x: x['qtd'], reverse=True)
+
+        print("==== Produtos mais vendidos ====")
+        for i in range(len(ordenado)):
+            print(f"Produto: {ordenado[i]['produto']} - Quantidade: {ordenado[i]['qtd']} un.")
