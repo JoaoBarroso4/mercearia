@@ -1,0 +1,2 @@
+Arroz|10|Alimento|10
+Feijao|10|Alimento|10
