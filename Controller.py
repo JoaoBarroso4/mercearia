@@ -93,8 +93,11 @@ class ControllerEstoque:
     def listar(self):
         estoque = DaoEstoque.ler()
         if len(estoque) > 0:
-            print('Produtos em estoque: ' + ', '.join([estoque[i].produto.nome + ' - ' + str(estoque[i].qtd)
-                                                       + ' unidades' for i in range(len(estoque))]))
+            print('==== Produtos em estoque ==== \n' + '\n'.join([f"Produto: {estoque[i].produto.nome} - "
+                                                                  f"Categoria: {estoque[i].produto.categoria} -"
+                                                                  f" Preço: R${estoque[i].produto.preco} -"
+                                                                  f" Quantidade: ${estoque[i].qtd} un."
+                                                                  for i in range(len(estoque))]))
         else:
             print('Não há produtos em estoque.')
 
@@ -150,4 +153,5 @@ class ControllerEstoque:
 
 
 a = ControllerEstoque()
-a.alterar(Produtos('Arroz', 10, 'Alimento'), Produtos('Coca', 5, 'Bebida'), 10)
+# a.alterar(Produtos('Arroz', 10, 'Alimento'), Produtos('Coca', 5, 'Bebida'), 10)
+a.listar()
