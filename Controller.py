@@ -39,10 +39,20 @@ class ControllerCategoria:
             print('Categoria removida com sucesso!')
         else:
             print('A categoria não existe.')
+            return None
 
         with open('categoria.txt', 'w') as arq:
             for categoria in categorias:
                 arq.write(categoria.categoria + '\n')
+
+        estoque = DaoEstoque.ler()
+        estoque = list(map(lambda x: x if x.produto.categoria != categoriaRemover else Estoque(Produtos(
+            x.produto.nome, x.produto.preco, "Sem categoria"), x.qtd), estoque))
+
+        with open('estoque.txt', 'w') as arq:
+            for etq in estoque:
+                arq.write('|'.join([etq.produto.nome, str(etq.produto.preco), etq.produto.categoria,
+                                    str(etq.qtd)]) + '\n')
 
     def alterar(self, categoriaAlterar, categoriaNova):
         categorias = DaoCategoria.ler()
@@ -56,17 +66,29 @@ class ControllerCategoria:
                     # aplica a atualizacao usando map
                     categorias = list(map(lambda x: x.categoria if (x.categoria != categoriaAlterar) else categoriaNova,
                                           categorias))
+                    print('Categoria alterada com sucesso!')
                 else:
                     print('A categoria já existe.')
-                break
-            print('Categoria alterada com sucesso!')
+                    return None
         else:
             print('A categoria não existe.')
+            return None
 
         with open('categoria.txt', 'w') as arq:
             for categoria in categorias:
-                arq.write(Categoria(categoria).categoria + '\n')
+                arq.write(categoria.categoria + '\n')
 
+        estoque = DaoEstoque.ler()
+        estoque = list(map(lambda x: x if x.produto.categoria != categoriaAlterar else Estoque(Produtos(
+            x.produto.nome, x.produto.preco, categoriaNova), x.qtd), estoque))
+
+        with open('estoque.txt', 'w') as arq:
+            for etq in estoque:
+                arq.write('|'.join([etq.produto.nome, str(etq.produto.preco), etq.produto.categoria,
+                                    str(etq.qtd)]) + '\n')
+
+a = ControllerCategoria()
+a.alterar('Alimento', 'Verduras')
 
 class ControllerEstoque:
     def inserir(self, nome, preco, categoria, qtd):
@@ -115,6 +137,7 @@ class ControllerEstoque:
             print('Produto removido com sucesso!')
         else:
             print('Produto não cadastrado.')
+            return None
 
         with open('estoque.txt', 'w') as arq:
             for etq in estoque:
@@ -142,9 +165,10 @@ class ControllerEstoque:
                         break
                     else:
                         print('Categoria inexistente.')
-                        break
+                        return None
         else:
             print('Produto não cadastrado.')
+            return None
 
         with open('estoque.txt', 'w') as arq:
             for etq in produtos:
@@ -177,9 +201,10 @@ class ControllerVenda:
                         break
                     else:
                         print('Quantidade em estoque insuficiente.')
-                        break
+                        return None
         else:
             print('Produto não cadastrado.')
+            return None
 
         with open('estoque.txt', 'w') as arq:
             for prd in produtos:
@@ -278,6 +303,7 @@ class ControllerFornecedor:
                     break
         else:
             print('Fornecedor não cadastrado.')
+            return None
 
         with open('fornecedores.txt', 'w') as arq:
             for forn in fornecedores:
@@ -297,6 +323,7 @@ class ControllerFornecedor:
             print('Fornecedor removido com sucesso!')
         else:
             print('Fornecedor não cadastrado.')
+            return None
 
         with open('fornecedores.txt', 'w') as arq:
             for forn in fornecedores:
@@ -313,11 +340,11 @@ class ControllerFornecedor:
             print('Não há fornecedores cadastrados.')
 
 
-a = ControllerFornecedor()
+# a = ControllerFornecedor()
 # a.remover('123.456.089-00')
 # a.inserir('Fornecedor 1', '30.880.120/0001-91', '(63) 98480-5361', 'Categoria 1')
 # a.alterar('30.880.120/0001-91', novaCategoria='Legumes')
-a.listar()
+# a.listar()
 
 
 class ControllerCliente:
@@ -359,6 +386,7 @@ class ControllerCliente:
                     break
         else:
             print('Cliente não cadastrado.')
+            return None
 
         with open('clientes.txt', 'w') as arq:
             for cli in clientes:
@@ -378,6 +406,7 @@ class ControllerCliente:
             print('Cliente removido com sucesso!')
         else:
             print('Cliente não cadastrado.')
+            return None
 
         with open('clientes.txt', 'w') as arq:
             for cli in clientes:
@@ -441,6 +470,7 @@ class ControllerFuncionario:
                     break
         else:
             print('Funcionário não cadastrado.')
+            return None
 
         with open('funcionarios.txt', 'w') as arq:
             for func in funcionarios:
@@ -456,10 +486,11 @@ class ControllerFuncionario:
             for i in range(len(funcionarios)):
                 if funcionarios[i].cpf == cpf:
                     funcionarios.pop(i)
+                    print('Funcionário removido com sucesso!')
                     break
-            print('Funcionário removido com sucesso!')
         else:
             print('Funcionário não cadastrado.')
+            return None
 
         with open('funcionarios.txt', 'w') as arq:
             for func in funcionarios:
