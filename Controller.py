@@ -312,8 +312,165 @@ class ControllerFornecedor:
         else:
             print('Não há fornecedores cadastrados.')
 
+
 a = ControllerFornecedor()
 # a.remover('123.456.089-00')
 # a.inserir('Fornecedor 1', '30.880.120/0001-91', '(63) 98480-5361', 'Categoria 1')
 # a.alterar('30.880.120/0001-91', novaCategoria='Legumes')
 a.listar()
+
+
+class ControllerCliente:
+    def inserir(self, nome, cpf, telefone, endereco, email):
+        clientes = DaoPessoa.ler()
+
+        # verifica se o cpf existe
+        existeCpf = len(list(filter(lambda x: x.cpf == cpf, clientes))) > 0
+
+        if existeCpf:
+            print('CPF já cadastrado.')
+        else:
+            if len(cpf) == 14 and len(telefone) == 15:
+                DaoPessoa.salvar(Pessoa(nome, cpf, telefone, endereco, email))
+                print('Cliente cadastrado com sucesso!')
+            else:
+                print('CPF ou telefone inválido.')
+
+    def alterar(self, cpf, nomeNovo=None, novoTelefone=None, novoCpf=None, novoEndereco=None, novoEmail=None):
+        clientes = DaoPessoa.ler()
+
+        # verifica se o cpf existe
+        existeCpf = len(list(filter(lambda x: x.cpf == cpf, clientes))) > 0
+
+        if existeCpf:
+            for i in range(len(clientes)):
+                if clientes[i].cpf == cpf:
+                    if nomeNovo is not None:
+                        clientes[i].nome = nomeNovo
+                    if novoTelefone is not None:
+                        clientes[i].telefone = novoTelefone
+                    if novoCpf is not None:
+                        clientes[i].cpf = novoCpf
+                    if novoEndereco is not None:
+                        clientes[i].endereco = novoEndereco
+                    if novoEmail is not None:
+                        clientes[i].email = novoEmail
+                    print('Cliente alterado com sucesso!')
+                    break
+        else:
+            print('Cliente não cadastrado.')
+
+        with open('clientes.txt', 'w') as arq:
+            for cli in clientes:
+                arq.write('|'.join([cli.nome, cli.cpf, cli.telefone]) + '\n')
+
+    def remover(self, cpf):
+        clientes = DaoPessoa.ler()
+
+        # verifica se o cpf existe
+        existeCpf = len(list(filter(lambda x: x.cpf == cpf, clientes))) > 0
+
+        if existeCpf:
+            for i in range(len(clientes)):
+                if clientes[i].cpf == cpf:
+                    clientes.pop(i)
+                    break
+            print('Cliente removido com sucesso!')
+        else:
+            print('Cliente não cadastrado.')
+
+        with open('clientes.txt', 'w') as arq:
+            for cli in clientes:
+                arq.write('|'.join([cli.nome, cli.cpf, cli.telefone]) + '\n')
+
+    def listar(self):
+        clientes = DaoPessoa.ler()
+        if len(clientes) > 0:
+            print('==== Clientes cadastrados ====')
+            for cliente in clientes:
+                print(f"Nome: {cliente.nome} - CPF: {cliente.cpf} - Telefone: {cliente.telefone} -"
+                      f" Endereço: {cliente.endereco} - Email: {cliente.email}")
+        else:
+            print('Não há clientes cadastrados.')
+
+
+class ControllerFuncionario:
+    def inserir(self, clt, nome, cpf, telefone, endereco, email):
+        funcionarios = DaoFuncionario.ler()
+
+        # verifica se o cpf existe
+        existeCpf = len(list(filter(lambda x: x.cpf == cpf, funcionarios))) > 0
+
+        # verifica se o registro de clt existe
+        existeClt = len(list(filter(lambda x: x.clt == clt, funcionarios))) > 0
+
+        if existeCpf:
+            print('CPF já cadastrado.')
+        elif existeClt:
+            print('Registro de CLT já cadastrado.')
+        else:
+            if len(cpf) == 14 and len(telefone) == 15:
+                DaoFuncionario.salvar(Funcionario(clt, nome, cpf, telefone, endereco, email))
+                print('Funcionário cadastrado com sucesso!')
+            else:
+                print('CPF ou telefone inválido.')
+
+    def alterar(self, cpf, cltNovo=None, nomeNovo=None, novoTelefone=None, novoCpf=None, novoEndereco=None,
+                novoEmail=None):
+        funcionarios = DaoFuncionario.ler()
+
+        # verifica se o cpf existe
+        existeCpf = len(list(filter(lambda x: x.cpf == cpf, funcionarios))) > 0
+
+        if existeCpf:
+            for i in range(len(funcionarios)):
+                if funcionarios[i].cpf == cpf:
+                    if cltNovo is not None:
+                        funcionarios[i].clt = cltNovo
+                    if nomeNovo is not None:
+                        funcionarios[i].nome = nomeNovo
+                    if novoTelefone is not None:
+                        funcionarios[i].telefone = novoTelefone
+                    if novoCpf is not None:
+                        funcionarios[i].cpf = novoCpf
+                    if novoEndereco is not None:
+                        funcionarios[i].endereco = novoEndereco
+                    if novoEmail is not None:
+                        funcionarios[i].email = novoEmail
+                    print('Funcionário alterado com sucesso!')
+                    break
+        else:
+            print('Funcionário não cadastrado.')
+
+        with open('funcionarios.txt', 'w') as arq:
+            for func in funcionarios:
+                arq.write('|'.join([func.clt, func.nome, func.cpf, func.telefone, func.endereco, func.email]) + '\n')
+
+    def remover(self, cpf):
+        funcionarios = DaoFuncionario.ler()
+
+        # verifica se o cpf existe
+        existeCpf = len(list(filter(lambda x: x.cpf == cpf, funcionarios))) > 0
+
+        if existeCpf:
+            for i in range(len(funcionarios)):
+                if funcionarios[i].cpf == cpf:
+                    funcionarios.pop(i)
+                    break
+            print('Funcionário removido com sucesso!')
+        else:
+            print('Funcionário não cadastrado.')
+
+        with open('funcionarios.txt', 'w') as arq:
+            for func in funcionarios:
+                arq.write('|'.join([func.clt, func.nome, func.cpf, func.telefone, func.endereco, func.email]) + '\n')
+
+    def listar(self):
+        funcionarios = DaoFuncionario.ler()
+        if len(funcionarios) > 0:
+            print('==== Funcionários cadastrados ====')
+            for funcionario in funcionarios:
+                print(f"CLT: {funcionario.clt} - Nome: {funcionario.nome} - CPF: {funcionario.cpf} -"
+                      f" Telefone: {funcionario.telefone} - Endereço: {funcionario.endereco} - Email: {funcionario.email}")
+        else:
+            print('Não há funcionários cadastrados.')
