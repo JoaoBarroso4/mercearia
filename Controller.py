@@ -187,6 +187,7 @@ class ControllerVenda:
                                     str(prd.qtd)]) + '\n')
         return valorCompra
 
+    # relatorio de vendas
     def listar(self):
         vendas = DaoVenda.ler()
         produtos = []
@@ -209,3 +210,110 @@ class ControllerVenda:
         print("==== Produtos mais vendidos ====")
         for i in range(len(ordenado)):
             print(f"Produto: {ordenado[i]['produto']} - Quantidade: {ordenado[i]['qtd']} un.")
+
+    # metodo para mostrar vendas em determinado período
+    def pesquisar(self, dataI, dataF):
+        vendas = DaoVenda.ler()
+        dataInicio = datetime.strptime(dataI, "%d/%m/%Y")
+        dataFim = datetime.strptime(dataF, "%d/%m/%Y")
+
+        # filtra as vendas usando o filter
+        filtradas = list(filter(lambda x: dataInicio <= datetime
+                                .strptime(x.data, "%d/%m/%Y") <= dataFim, vendas))
+
+        i = 1
+        totalVend = 0
+        for venda in filtradas:
+            print(f"===== Venda {i} =====")
+            print(f"Produto: {venda.itensVendidos.nome}")
+            print(f"Categoria: {venda.itensVendidos.categoria}")
+            print(f"Quantidade: {venda.qtdVendida}")
+            print(f"Data: {venda.data}")
+            print(f"Vendedor: {venda.vendedor}")
+            print(f"Comprador: {venda.comprador}\n")
+            i += 1
+            totalVend += int(venda.qtdVendida) * int(venda.itensVendidos.preco)
+        print(f"Total de vendas: R${totalVend}")
+
+
+class ControllerFornecedor:
+    def inserir(self, nome, cnpj, telefone, categoria):
+        fornecedores = DaoFornecedor.ler()
+
+        # verifica se a telefone existe
+        existeTel = len(list(filter(lambda x: x.telefone == telefone, fornecedores))) > 0
+
+        # verifica se o cnpj existe
+        existeCnpj = len(list(filter(lambda x: x.cnpj == cnpj, fornecedores))) > 0
+
+        if existeTel:
+            print('Telefone já cadastrado.')
+        elif existeCnpj:
+            print('CNPJ já cadastrado.')
+        else:
+            if len(cnpj) == 18 and len(telefone) == 15:
+                DaoFornecedor.salvar(Fornecedor(nome, cnpj, telefone, categoria))
+                print('Fornecedor cadastrado com sucesso!')
+            else:
+                print('CNPJ ou telefone inválido.')
+
+    def alterar(self, cnpj, nomeNovo=None, novoTelefone=None, novaCategoria=None, novoCnpj=None):
+        fornecedores = DaoFornecedor.ler()
+
+        # verifica se o cnpj existe
+        existeCnpj = len(list(filter(lambda x: x.cnpj == cnpj, fornecedores))) > 0
+
+        if existeCnpj:
+            for i in range(len(fornecedores)):
+                if fornecedores[i].cnpj == cnpj:
+                    if nomeNovo is not None:
+                        fornecedores[i].nome = nomeNovo
+                    if novoTelefone is not None:
+                        fornecedores[i].telefone = novoTelefone
+                    if novaCategoria is not None:
+                        fornecedores[i].categoria = novaCategoria
+                    if novoCnpj is not None:
+                        fornecedores[i].cnpj = novoCnpj
+                    print('Fornecedor alterado com sucesso!')
+                    break
+        else:
+            print('Fornecedor não cadastrado.')
+
+        with open('fornecedores.txt', 'w') as arq:
+            for forn in fornecedores:
+                arq.write('|'.join([forn.nome, forn.cnpj, forn.telefone, forn.categoria]) + '\n')
+
+    def remover(self, cnpj):
+        fornecedores = DaoFornecedor.ler()
+
+        # verifica se o cnpj existe
+        existeCnpj = len(list(filter(lambda x: x.cnpj == cnpj, fornecedores))) > 0
+
+        if existeCnpj:
+            for i in range(len(fornecedores)):
+                if fornecedores[i].cnpj == cnpj:
+                    fornecedores.pop(i)
+                    break
+            print('Fornecedor removido com sucesso!')
+        else:
+            print('Fornecedor não cadastrado.')
+
+        with open('fornecedores.txt', 'w') as arq:
+            for forn in fornecedores:
+                arq.write('|'.join([forn.nome, forn.cnpj, forn.telefone, forn.categoria]) + '\n')
+
+    def listar(self):
+        fornecedores = DaoFornecedor.ler()
+        if len(fornecedores) > 0:
+            print('==== Fornecedores cadastrados ====')
+            for fornecedor in fornecedores:
+                print(f"Nome: {fornecedor.nome} - CNPJ: {fornecedor.cnpj} - Telefone: {fornecedor.telefone} -"
+                      f" Categoria: {fornecedor.categoria}")
+        else:
+            print('Não há fornecedores cadastrados.')
+
+a = ControllerFornecedor()
+# a.remover('123.456.089-00')
+# a.inserir('Fornecedor 1', '30.880.120/0001-91', '(63) 98480-5361', 'Categoria 1')
+# a.alterar('30.880.120/0001-91', novaCategoria='Legumes')
+a.listar()
