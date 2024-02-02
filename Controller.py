@@ -41,7 +41,7 @@ class ControllerCategoria:
             print('A categoria não existe.')
             return None
 
-        with open('categoria.txt', 'w') as arq:
+        with open('BDs/categoria.txt', 'w') as arq:
             for categoria in categorias:
                 arq.write(categoria.categoria + '\n')
 
@@ -49,7 +49,7 @@ class ControllerCategoria:
         estoque = list(map(lambda x: x if x.produto.categoria != categoriaRemover else Estoque(Produtos(
             x.produto.nome, x.produto.preco, "Sem categoria"), x.qtd), estoque))
 
-        with open('estoque.txt', 'w') as arq:
+        with open('BDs/estoque.txt', 'w') as arq:
             for etq in estoque:
                 arq.write('|'.join([etq.produto.nome, str(etq.produto.preco), etq.produto.categoria,
                                     str(etq.qtd)]) + '\n')
@@ -74,7 +74,7 @@ class ControllerCategoria:
             print('A categoria não existe.')
             return None
 
-        with open('categoria.txt', 'w') as arq:
+        with open('BDs/categoria.txt', 'w') as arq:
             for categoria in categorias:
                 arq.write(categoria.categoria + '\n')
 
@@ -82,13 +82,15 @@ class ControllerCategoria:
         estoque = list(map(lambda x: x if x.produto.categoria != categoriaAlterar else Estoque(Produtos(
             x.produto.nome, x.produto.preco, categoriaNova), x.qtd), estoque))
 
-        with open('estoque.txt', 'w') as arq:
+        with open('BDs/estoque.txt', 'w') as arq:
             for etq in estoque:
                 arq.write('|'.join([etq.produto.nome, str(etq.produto.preco), etq.produto.categoria,
                                     str(etq.qtd)]) + '\n')
 
+
 a = ControllerCategoria()
 a.alterar('Alimento', 'Verduras')
+
 
 class ControllerEstoque:
     def inserir(self, nome, preco, categoria, qtd):
@@ -123,7 +125,7 @@ class ControllerEstoque:
         else:
             print('Não há produtos em estoque.')
 
-    def remover(self, produto: Produtos):
+    def remover(self, produto):
         estoque = DaoEstoque.ler()
 
         # verifica se o produto existe
@@ -139,21 +141,21 @@ class ControllerEstoque:
             print('Produto não cadastrado.')
             return None
 
-        with open('estoque.txt', 'w') as arq:
+        with open('BDs/estoque.txt', 'w') as arq:
             for etq in estoque:
                 arq.write('|'.join([etq.produto.nome, str(etq.produto.preco), etq.produto.categoria,
                                     str(etq.qtd)]) + '\n')
 
-    def alterar(self, produtoAlt: Produtos, produtoNovo: Produtos, qtd):
+    def alterar(self, produtoAlt, produtoNovo: Produtos, qtd):
         produtos = DaoEstoque.ler()
         categorias = DaoCategoria.ler()
 
         # verifica se o produto existe
-        existeProdAlt = len(list(filter(lambda x: x.produto.nome == produtoAlt.nome, produtos))) > 0
+        existeProdAlt = len(list(filter(lambda x: x.produto.nome == produtoAlt, produtos))) > 0
 
         if existeProdAlt:
             for i in range(len(produtos)):
-                if produtos[i].produto.nome == produtoAlt.nome:
+                if produtos[i].produto.nome == produtoAlt:
 
                     # verifica se a nova categoria existe
                     existeCat = len(list(filter(lambda x: x.categoria == produtoNovo.categoria, categorias))) > 0
@@ -170,7 +172,7 @@ class ControllerEstoque:
             print('Produto não cadastrado.')
             return None
 
-        with open('estoque.txt', 'w') as arq:
+        with open('BDs/estoque.txt', 'w') as arq:
             for etq in produtos:
                 arq.write('|'.join([etq.produto.nome, str(etq.produto.preco), etq.produto.categoria,
                                     str(etq.qtd)]) + '\n')
@@ -206,7 +208,7 @@ class ControllerVenda:
             print('Produto não cadastrado.')
             return None
 
-        with open('estoque.txt', 'w') as arq:
+        with open('BDs/estoque.txt', 'w') as arq:
             for prd in produtos:
                 arq.write('|'.join([prd.produto.nome, str(prd.produto.preco), prd.produto.categoria,
                                     str(prd.qtd)]) + '\n')
@@ -305,7 +307,7 @@ class ControllerFornecedor:
             print('Fornecedor não cadastrado.')
             return None
 
-        with open('fornecedores.txt', 'w') as arq:
+        with open('BDs/fornecedores.txt', 'w') as arq:
             for forn in fornecedores:
                 arq.write('|'.join([forn.nome, forn.cnpj, forn.telefone, forn.categoria]) + '\n')
 
@@ -325,7 +327,7 @@ class ControllerFornecedor:
             print('Fornecedor não cadastrado.')
             return None
 
-        with open('fornecedores.txt', 'w') as arq:
+        with open('BDs/fornecedores.txt', 'w') as arq:
             for forn in fornecedores:
                 arq.write('|'.join([forn.nome, forn.cnpj, forn.telefone, forn.categoria]) + '\n')
 
@@ -388,7 +390,7 @@ class ControllerCliente:
             print('Cliente não cadastrado.')
             return None
 
-        with open('clientes.txt', 'w') as arq:
+        with open('BDs/clientes.txt', 'w') as arq:
             for cli in clientes:
                 arq.write('|'.join([cli.nome, cli.cpf, cli.telefone]) + '\n')
 
@@ -408,7 +410,7 @@ class ControllerCliente:
             print('Cliente não cadastrado.')
             return None
 
-        with open('clientes.txt', 'w') as arq:
+        with open('BDs/clientes.txt', 'w') as arq:
             for cli in clientes:
                 arq.write('|'.join([cli.nome, cli.cpf, cli.telefone]) + '\n')
 
@@ -472,7 +474,7 @@ class ControllerFuncionario:
             print('Funcionário não cadastrado.')
             return None
 
-        with open('funcionarios.txt', 'w') as arq:
+        with open('BDs/funcionarios.txt', 'w') as arq:
             for func in funcionarios:
                 arq.write('|'.join([func.clt, func.nome, func.cpf, func.telefone, func.endereco, func.email]) + '\n')
 
@@ -492,7 +494,7 @@ class ControllerFuncionario:
             print('Funcionário não cadastrado.')
             return None
 
-        with open('funcionarios.txt', 'w') as arq:
+        with open('BDs/funcionarios.txt', 'w') as arq:
             for func in funcionarios:
                 arq.write('|'.join([func.clt, func.nome, func.cpf, func.telefone, func.endereco, func.email]) + '\n')
 

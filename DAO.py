@@ -4,12 +4,12 @@ from Models import *
 class DaoCategoria:
     @classmethod
     def salvar(cls, categoria):
-        with open('categoria.txt', 'a') as arq:
+        with open('BDs/categoria.txt', 'a') as arq:
             arq.writelines(categoria + '\n')
 
     @classmethod
     def ler(cls):
-        with open('categoria.txt', 'r') as arq:
+        with open('BDs/categoria.txt', 'r') as arq:
             cls.categoria = arq.readlines()
 
         cls.categoria = list(map(lambda x: x.replace('\n', ''), cls.categoria))
@@ -30,12 +30,12 @@ class DaoVenda:
             venda.data
         ])
 
-        with open('venda.txt', 'a') as arq:
+        with open('BDs/venda.txt', 'a') as arq:
             arq.write(venda_info + '\n')
 
     @classmethod
     def ler(cls):
-        with open('venda.txt', 'r') as arq:
+        with open('BDs/venda.txt', 'r') as arq:
             cls.venda = arq.readlines()
 
             cls.venda = list(map(lambda x: x.replace('\n', '').split('|'), cls.venda))
@@ -82,12 +82,12 @@ class DaoEstoque:
             estoque.qtd
         ])
 
-        with open('estoque.txt', 'a') as arq:
+        with open('BDs/estoque.txt', 'a') as arq:
             arq.write(estoque_info + '\n')
 
     @classmethod
     def ler(cls):
-        with open('estoque.txt', 'r') as arq:
+        with open('BDs/estoque.txt', 'r') as arq:
             cls.estoque = arq.readlines()
 
             cls.estoque = list(map(lambda x: x.replace('\n', '').split('|'), cls.estoque))
@@ -105,12 +105,12 @@ class DaoFornecedor:
             fornecedor.categoria
         ])
 
-        with open('fornecedores.txt', 'a') as arq:
+        with open('BDs/fornecedores.txt', 'a') as arq:
             arq.write(fornecedor_info + '\n')
 
     @classmethod
     def ler(cls):
-        with open('fornecedores.txt', 'r') as arq:
+        with open('BDs/fornecedores.txt', 'r') as arq:
             cls.fornecedor = arq.readlines()
 
             cls.fornecedor = list(map(lambda x: x.replace('\n', '').split('|'), cls.fornecedor))
@@ -129,12 +129,12 @@ class DaoPessoa:
             pessoa.email
         ])
 
-        with open('clientes.txt', 'a') as arq:
+        with open('BDs/clientes.txt', 'a') as arq:
             arq.write(pessoa_info + '\n')
 
     @classmethod
     def ler(cls):
-        with open('clientes.txt', 'r') as arq:
+        with open('BDs/clientes.txt', 'r') as arq:
             cls.pessoa = arq.readlines()
 
             cls.pessoa = list(map(lambda x: x.replace('\n', '').split('|'), cls.pessoa))
@@ -154,12 +154,12 @@ class DaoFuncionario:
             funcionario.email
         ])
 
-        with open('funcionarios.txt', 'a') as arq:
+        with open('BDs/funcionarios.txt', 'a') as arq:
             arq.write(funcionario_info + '\n')
 
     @classmethod
     def ler(cls):
-        with open('funcionarios.txt', 'r') as arq:
+        with open('BDs/funcionarios.txt', 'r') as arq:
             cls.funcionario = arq.readlines()
 
             cls.funcionario = list(map(lambda x: x.replace('\n', '').split('|'), cls.funcionario))
